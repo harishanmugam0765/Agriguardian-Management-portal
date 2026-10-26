@@ -1766,6 +1766,21 @@ document.addEventListener('DOMContentLoaded', () => {
     await login(u, p);
   });
 
+  // Toggle Password Visibility
+  $('#btn-toggle-pwd')?.addEventListener('click', () => {
+    const input = $('#login-password');
+    const btn = $('#btn-toggle-pwd');
+    if (input) {
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (btn) btn.textContent = '🔒';
+      } else {
+        input.type = 'password';
+        if (btn) btn.textContent = '👁️';
+      }
+    }
+  });
+
   // Logout Button
   $('#btn-logout')?.addEventListener('click', async () => {
     if (confirm('Are you sure you want to sign out of the management portal?')) {

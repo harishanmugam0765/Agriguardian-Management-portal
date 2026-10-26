@@ -8,9 +8,12 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+const JWT_SECRET = process.env.JWT_SECRET || 'agri-production-jwt-token-secret-2026';
 
 // Middleware
 app.use(cors());
@@ -569,16 +572,31 @@ app.post('/api/auth/login', async (req, res) => {
     );
 
     if (!user) {
+      await logAudit(cleanUser || 'Anonymous', 'LOGIN_FAILED', 'Authentication', '-', `Failed login for non-existent user: ${cleanUser}`);
       return res.status(401).json({ ok: false, error: 'Invalid username or official email address.' });
     }
 
-    // Verify password (supports configured password or universal fallback)
-    if (user.password !== cleanPass && !['agri123', 'Director@2026', 'HR@2026', 'Finance@2026', 'admin123'].includes(cleanPass)) {
-      return res.status(401).json({ ok: false, error: 'Incorrect password. Please verify credentials or use one-click login.' });
+    // Verify password dynamically against database (supports bcrypt hash or direct stored password)
+    let passwordValid = false;
+    if (user.password && (user.password.startsWith('$2a$') || user.password.startsWith('$2b$'))) {
+      passwordValid = await bcrypt.compare(cleanPass, user.password);
+    } else {
+      passwordValid = (user.password === cleanPass);
     }
 
-    const token = `ag-token-${user.id}-${Date.now()}`;
-    await logAudit(user.name, 'USER_LOGIN', 'Authentication', `USER-${user.id}`, `${user.name} signed in as ${user.role}`);
+    if (!passwordValid) {
+      await logAudit(user.name, 'LOGIN_FAILED', 'Authentication', `USER-${user.id}`, `Incorrect password attempt for ${user.username}`);
+      return res.status(401).json({ ok: false, error: 'Invalid username or password.' });
+    }
+
+    // Issue signed JWT token
+    const token = jwt.sign(
+      { id: user.id, username: user.username, role: user.role, name: user.name },
+      JWT_SECRET,
+      { expiresIn: '12h' }
+    );
+
+    await logAudit(user.name, 'USER_LOGIN', 'Authentication', `USER-${user.id}`, `${user.name} signed in dynamically as ${user.role}`);
 
     res.json({
       ok: true,
@@ -609,16 +627,29 @@ app.post('/api/auth/logout', async (req, res) => {
 app.get('/api/auth/me', async (req, res) => {
   try {
     const authHeader = req.headers.authorization || '';
-    let userId = 1;
-    if (authHeader.includes('ag-token-')) {
-      const parts = authHeader.split('ag-token-')[1].split('-');
-      userId = parseInt(parts[0], 10) || 1;
+    const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+    let userId = null;
+
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        userId = decoded.id;
+      } catch (e) {
+        if (token.includes('ag-token-')) {
+          userId = parseInt(token.split('ag-token-')[1].split('-')[0], 10);
+        }
+      }
     }
+
+    if (!userId) {
+      return res.status(401).json({ ok: false, error: 'Not authenticated' });
+    }
+
     const user = await get(`SELECT id, username, name, role, title, department, email FROM users WHERE id = ?`, [userId]);
     if (user) {
       return res.json({ ok: true, user });
     }
-    res.status(401).json({ ok: false, error: 'Not authenticated' });
+    res.status(401).json({ ok: false, error: 'User not found' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -34,67 +34,24 @@
         <form id="form-login">
           <div class="form-group">
             <label class="form-label">Username or Official Email</label>
-            <input type="text" id="login-username" class="form-input" placeholder="e.g. shengian, saivignesh, haripriya, hr, finance" required autofocus>
+            <input type="text" id="login-username" class="form-input" placeholder="Enter your username or official email" required autofocus autocomplete="username">
           </div>
 
           <div class="form-group">
             <label class="form-label">Password</label>
-            <input type="password" id="login-password" class="form-input" placeholder="Enter password (e.g. Director@2026 or agri123)" required>
+            <div class="password-input-wrap">
+              <input type="password" id="login-password" class="form-input" placeholder="Enter your password" required autocomplete="current-password">
+              <button type="button" class="btn-toggle-password" id="btn-toggle-pwd" title="Show/Hide password">👁️</button>
+            </div>
           </div>
 
-          <button type="submit" class="btn btn-primary" style="width:100%; padding:0.75rem; font-size:0.95rem; margin-top:0.4rem;" id="btn-login-submit">
+          <button type="submit" class="btn btn-primary" style="width:100%; padding:0.8rem; font-size:0.98rem; font-weight:600; margin-top:0.6rem;" id="btn-login-submit">
             Sign In to Portal →
           </button>
         </form>
 
-        <div class="login-divider">
-          <span>OR CHOOSE ONE-CLICK AUTHORIZED SIGN-IN</span>
-        </div>
-
-        <div class="quick-login-grid">
-          <button type="button" class="quick-login-btn director highlight" onclick="quickLogin('shengian', 'Director@2026')">
-            <div class="quick-login-avatar">ST</div>
-            <div class="quick-login-info">
-              <strong>Shengian T</strong>
-              <span>Director & Managing Director (Admin)</span>
-            </div>
-          </button>
-
-          <button type="button" class="quick-login-btn director" onclick="quickLogin('saivignesh', 'Director@2026')">
-            <div class="quick-login-avatar">SV</div>
-            <div class="quick-login-info">
-              <strong>Saivignesh R V</strong>
-              <span>Founder & CEO (Admin)</span>
-            </div>
-          </button>
-
-          <button type="button" class="quick-login-btn director" onclick="quickLogin('haripriya', 'Director@2026')">
-            <div class="quick-login-avatar">HP</div>
-            <div class="quick-login-info">
-              <strong>Haripriya S</strong>
-              <span>Director & CFO (Admin)</span>
-            </div>
-          </button>
-
-          <button type="button" class="quick-login-btn hr" onclick="quickLogin('hr', 'HR@2026')">
-            <div class="quick-login-avatar">HR</div>
-            <div class="quick-login-info">
-              <strong>Harini Sri M</strong>
-              <span>HR Manager (Project Lead)</span>
-            </div>
-          </button>
-
-          <button type="button" class="quick-login-btn finance" onclick="quickLogin('finance', 'Finance@2026')">
-            <div class="quick-login-avatar">FN</div>
-            <div class="quick-login-info">
-              <strong>Kanika H A</strong>
-              <span>Finance Manager (Financial Lead)</span>
-            </div>
-          </button>
-        </div>
-
-        <div class="login-footer-info">
-          <span>🔒 Persistent SQLite Database • Encrypted Session • Real-time Audit Trail</span>
+        <div class="login-footer-info" style="margin-top:1.5rem; text-align:center;">
+          <span>🔒 Enterprise Dynamic Authentication • Persistent Records • Secure Access</span>
         </div>
       </div>
     </div>
