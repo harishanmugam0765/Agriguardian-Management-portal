@@ -19,6 +19,10 @@
     "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3"
   },
+  "overrides": {
+    "tar": ">=7.5.3",
+    "@tootallnate/once": ">=2.0.1"
+  },
   "devDependencies": {
     "nodemon": "^3.1.7"
   },
