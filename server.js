@@ -374,7 +374,7 @@ async function initDatabase() {
         bank_name, bank_acc, bank_ifsc, bank_branch, quote_terms, offer_terms, cert_text, updated_at
       ) VALUES (
         1, 'AgriGuardian Private Limited', 'A Farmer''s Product — Agricultural Robotics & Operations',
-        'UDHAYAM-TN-02-0407122', 'Jeppiaar Institute, Jeppiaar Nagar, Kunnam, Sriperumbudur, Kanchipuram - 631604, Tamil Nadu',
+        'U01639TN2026PTC194498', 'Jeppiaar Institute, Jeppiaar Nagar, Kunnam, Sriperumbudur, Kanchipuram - 631604, Tamil Nadu',
         'agriguardians@gmail.com', '+91 8072078836',
         'Union Bank of India', '520101269970136', 'UBIN0912786', 'Chennai Perambur Branch',
         '1. Fee covers 196 students for full 3-month duration with all materials.\n2. Student attendance and performance tracking shared bi-weekly with school.',
@@ -383,6 +383,9 @@ async function initDatabase() {
         ?
       )
     `, [now]);
+  } else {
+    // Migrate any existing database record to CIN
+    await run(`UPDATE company_settings SET udyam_reg = 'U01639TN2026PTC194498' WHERE udyam_reg LIKE 'UDHAYAM%' OR udyam_reg IS NULL`);
   }
 
   // Seed 15 Real Employees
@@ -1200,7 +1203,7 @@ app.get('/api/settings', async (req, res) => {
       settings = {
         company_name: 'AgriGuardian Private Limited',
         brand_tagline: "A Farmer's Product — Agricultural Robotics & Operations",
-        udyam_reg: 'UDHAYAM-TN-02-0407122',
+        udyam_reg: 'U01639TN2026PTC194498',
         registered_office: 'Jeppiaar Institute, Jeppiaar Nagar, Kunnam, Sriperumbudur, Kanchipuram - 631604, Tamil Nadu',
         primary_email: 'agriguardians@gmail.com',
         primary_phone: '+91 8072078836',

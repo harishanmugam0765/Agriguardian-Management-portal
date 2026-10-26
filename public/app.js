@@ -600,7 +600,7 @@ function generateLandscapeCertificateHTML(d) {
               <img src="logo-shield.png" class="crest" alt="AgriGuardian Crest">
               <div>
                 <h2>AGRIGUARDIAN PRIVATE LIMITED</h2>
-                <span class="reg">UDHAYAM-TN-02-0407122 • SRI PERUMBUDUR, TAMIL NADU</span>
+                <span class="reg">CIN: U01639TN2026PTC194498 • SRI PERUMBUDUR, TAMIL NADU</span>
               </div>
             </div>
 
@@ -822,7 +822,7 @@ function generateInternOfferLetterHTML(d) {
       <div class="letter-header">
         <img src="logo-shield.png" class="shield" alt="Shield Logo">
         <h2>AGRIGUARDIAN</h2>
-        <span class="udhyam">UDHAYAM-TN-02-0407122</span>
+        <span class="udhyam">CIN: U01639TN2026PTC194498</span>
       </div>
 
       <div class="letter-doc-title">INTERNSHIP OFFER LETTER</div>
@@ -1077,6 +1077,7 @@ function initAuth() {
       State.currentUserName = State.currentUser.name || 'Shengian T';
 
       applyUserSessionUI(State.currentUser);
+      document.body.classList.remove('unauthenticated');
       $('#portal-login-gate')?.classList.add('hidden');
       return true;
     } catch (e) {
@@ -1084,7 +1085,8 @@ function initAuth() {
     }
   }
 
-  // Not logged in -> show login gate
+  // Not logged in -> isolate login page and completely hide main website
+  document.body.classList.add('unauthenticated');
   $('#portal-login-gate')?.classList.remove('hidden');
   return false;
 }
@@ -1120,7 +1122,11 @@ async function login(username, password) {
     localStorage.setItem('ag_token', res.token);
 
     applyUserSessionUI(res.user);
+    document.body.classList.remove('unauthenticated');
     $('#portal-login-gate')?.classList.add('hidden');
+
+    // Load fresh data into portal now that user is authenticated
+    loadDashboard();
 
     // Route dynamically based on user role
     if (res.user.role === 'HR Manager') navigateTo('hr');
@@ -1150,6 +1156,7 @@ async function logout() {
   localStorage.removeItem('ag_token');
   State.currentUser = null;
   State.authToken = null;
+  document.body.classList.add('unauthenticated');
   $('#portal-login-gate')?.classList.remove('hidden');
 }
 
@@ -1929,7 +1936,9 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
   });
 
-  // Initialize Authentication & Load Initial Dashboard
-  initAuth();
-  loadDashboard();
+  // Initialize Authentication & Load Initial Dashboard only if authenticated
+  const authenticated = initAuth();
+  if (authenticated) {
+    loadDashboard();
+  }
 });

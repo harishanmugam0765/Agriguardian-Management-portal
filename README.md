@@ -104,4 +104,4 @@ agriguardian-portal/
 ---
 
 ## 🛡️ License & Copyright
-© 2026 AgriGuardian Private Limited. All rights reserved. Registered under Ministry of MSME, Govt. of India (UDHAYAM-TN-02-0407122).
+© 2026 AgriGuardian Private Limited. All rights reserved. Corporate Identification Number (CIN: U01639TN2026PTC194498).

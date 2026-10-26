@@ -1389,21 +1389,38 @@ table.quote-table tr.total-row {
    ========================================================================= */
 .login-gate {
   position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: var(--bg-body);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999999;
+  background-color: #07120a;
+  background: radial-gradient(circle at 50% 20%, #112b1c 0%, #060e08 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
   overflow-y: auto;
-  transition: opacity 0.25s ease, visibility 0.25s ease;
+  box-sizing: border-box;
 }
 
 .login-gate.hidden {
+  display: none !important;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+/* Ensure no overlap: While unauthenticated, hide the entire dashboard layout */
+body.unauthenticated aside,
+body.unauthenticated main,
+body.unauthenticated header {
+  display: none !important;
+}
+
+body.unauthenticated {
+  overflow: hidden;
+  background-color: #07120a;
 }
 
 .login-container {
