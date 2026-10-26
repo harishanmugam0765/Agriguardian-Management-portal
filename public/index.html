@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AgriGuardian Private Limited — Company Management Portal & Operations Manual</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="logo-shield.png">
+</head>
+<body>
+
+  <!-- ======================================================== -->
+  <!-- FULL SCREEN LOGIN GATE (5 SEPARATE LOGINS)               -->
+  <!-- ======================================================== -->
+  <div id="portal-login-gate" class="login-gate">
+    <div class="login-container">
+      <div class="login-brand-header">
+        <img src="logo-shield.png" alt="AgriGuardian Crest" class="login-crest">
+        <div class="login-brand-titles">
+          <h2>AGRIGUARDIAN PRIVATE LIMITED</h2>
+          <span class="login-brand-sub">Centralized Company Management Portal & Operations Manual</span>
+          <span class="login-reg-pill">UDHAYAM-TN-02-0407122 • SRI PERUMBUDUR, TAMIL NADU</span>
+        </div>
+      </div>
+
+      <div class="login-card">
+        <div class="login-card-header">
+          <h3>Sign In to Management Portal</h3>
+          <p>Authorized access for AgriGuardian Directors, HR, and Finance</p>
+        </div>
+
+        <div id="login-error-alert" class="login-error-alert hidden"></div>
+
+        <form id="form-login">
+          <div class="form-group">
+            <label class="form-label">Username or Official Email</label>
+            <input type="text" id="login-username" class="form-input" placeholder="e.g. shengian, saivignesh, haripriya, hr, finance" required autofocus>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="login-password" class="form-input" placeholder="Enter password (e.g. Director@2026 or agri123)" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%; padding:0.75rem; font-size:0.95rem; margin-top:0.4rem;" id="btn-login-submit">
+            Sign In to Portal →
+          </button>
+        </form>
+
+        <div class="login-divider">
+          <span>OR CHOOSE ONE-CLICK AUTHORIZED SIGN-IN</span>
+        </div>
+
+        <div class="quick-login-grid">
+          <button type="button" class="quick-login-btn director highlight" onclick="quickLogin('shengian', 'Director@2026')">
+            <div class="quick-login-avatar">ST</div>
+            <div class="quick-login-info">
+              <strong>Shengian T</strong>
+              <span>Director & Managing Director (Admin)</span>
+            </div>
+          </button>
+
+          <button type="button" class="quick-login-btn director" onclick="quickLogin('saivignesh', 'Director@2026')">
+            <div class="quick-login-avatar">SV</div>
+            <div class="quick-login-info">
+              <strong>Saivignesh R V</strong>
+              <span>Founder & CEO (Admin)</span>
+            </div>
+          </button>
+
+          <button type="button" class="quick-login-btn director" onclick="quickLogin('haripriya', 'Director@2026')">
+            <div class="quick-login-avatar">HP</div>
+            <div class="quick-login-info">
+              <strong>Haripriya S</strong>
+              <span>Director & CFO (Admin)</span>
+            </div>
+          </button>
+
+          <button type="button" class="quick-login-btn hr" onclick="quickLogin('hr', 'HR@2026')">
+            <div class="quick-login-avatar">HR</div>
+            <div class="quick-login-info">
+              <strong>Harini Sri M</strong>
+              <span>HR Manager (Project Lead)</span>
+            </div>
+          </button>
+
+          <button type="button" class="quick-login-btn finance" onclick="quickLogin('finance', 'Finance@2026')">
+            <div class="quick-login-avatar">FN</div>
+            <div class="quick-login-info">
+              <strong>Kanika H A</strong>
+              <span>Finance Manager (Financial Lead)</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="login-footer-info">
+          <span>🔒 Persistent SQLite Database • Encrypted Session • Real-time Audit Trail</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside>
+    <div class="brand-header">
+      <img src="logo-shield.png" alt="AgriGuardian Logo" class="brand-logo">
+      <div class="brand-title">
+        <h1>AgriGuardian</h1>
+        <span class="tagline">A Farmer's Product</span>
+        <span class="manual-tag">ERP & SOP MANUAL v2.4</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">CORE OPERATIONS</div>
+      <button class="nav-item active" data-nav="dashboard">
+        <span class="nav-num">01</span>
+        <span>Dashboard</span>
+      </button>
+
+      <button class="nav-item" data-nav="hr">
+        <span class="nav-num">02</span>
+        <span>HR Management</span>
+        <span class="nav-badge gold" id="badge-emp-count">15</span>
+      </button>
+
+      <button class="nav-item" data-nav="customers">
+        <span class="nav-num">03</span>
+        <span>Customers (Schools & Farmers)</span>
+      </button>
+
+      <button class="nav-item" data-nav="vendors">
+        <span class="nav-num">04</span>
+        <span>Vendor Management</span>
+      </button>
+
+      <div class="nav-section-title">FINANCIAL & COMMERCIAL</div>
+      <button class="nav-item" data-nav="sales">
+        <span class="nav-num">05</span>
+        <span>Sales & Business</span>
+      </button>
+
+      <button class="nav-item" data-nav="documents">
+        <span class="nav-num">06</span>
+        <span>Document Centre</span>
+      </button>
+
+      <button class="nav-item" data-nav="approvals">
+        <span class="nav-num">07</span>
+        <span>Approvals</span>
+        <span class="nav-badge" id="badge-pending-approvals">1</span>
+      </button>
+
+      <button class="nav-item" data-nav="emails">
+        <span class="nav-num">08</span>
+        <span>Email & Notifications</span>
+      </button>
+
+      <div class="nav-section-title">ENTERPRISE SYSTEM</div>
+      <button class="nav-item" data-nav="reports">
+        <span class="nav-num">09</span>
+        <span>Reports & Analytics</span>
+      </button>
+
+      <button class="nav-item" data-nav="settings">
+        <span class="nav-num">10</span>
+        <span>Settings & SOP Manual</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-profile-badge">
+        <div class="user-avatar" id="avatar-initials">SA</div>
+        <div class="user-info">
+          <span class="user-name" id="user-display-name">Saivignesh R V</span>
+          <span class="user-role" id="user-display-role">Super Admin (Founder & CEO)</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEWPORT -->
+  <main class="portal-content">
+    
+    <!-- TOP HEADER -->
+    <header class="top-bar">
+      <div class="page-headline">
+        <span class="page-eyebrow" id="page-eyebrow">
+          <span>OPERATIONS HUB</span> • <span>AGRIGUARDIAN PRIVATE LIMITED</span>
+        </span>
+        <h2 id="page-title">Executive Overview & Operations Center</h2>
+      </div>
+
+      <!-- GLOBAL UNIVERSAL SEARCH BAR -->
+      <div class="global-search-box">
+        <span class="search-icon">🔍</span>
+        <input type="search" id="global-search-input" placeholder="Search by name, ID (AG-EMP/AG-INT/QTN/INV), or dept..." autocomplete="off">
+        <div id="global-search-results" class="global-search-dropdown hidden"></div>
+      </div>
+
+      <div class="header-controls">
+        <!-- Quick Action Trigger -->
+        <button class="btn btn-primary btn-sm" id="btn-quick-new-doc">+ New Quotation / Doc</button>
+
+        <!-- Logged In User Pill -->
+        <div class="logged-user-chip" id="user-session-chip">
+          <div class="chip-avatar" id="header-avatar-initials">ST</div>
+          <div class="chip-text">
+            <span class="chip-name" id="header-user-name">Shengian T</span>
+            <span class="chip-role" id="header-user-role">Super Admin</span>
+          </div>
+          <button class="btn btn-secondary btn-xs btn-logout" id="btn-logout" title="Sign out of portal">🚪 Logout</button>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light / Dark Mode">
+          <span id="theme-icon">🌙</span> <span id="theme-label">Dark</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT BODY -->
+    <div class="viewport-body">
+
+      <!-- ========================================== -->
+      <!-- SECTION 1: DASHBOARD                      -->
+      <!-- ========================================== -->
+      <section class="portal-section active" id="sec-dashboard">
+        <div class="manual-banner">
+          <div class="manual-banner-content">
+            <h3><span class="sop-badge">SOP-01</span> Master Enterprise Command Console</h3>
+            <p>Single source of truth for AgriGuardian operations. Real-time statistics synced with PostgreSQL / SQLite state engine. Enter information once, generate documents automatically.</p>
+          </div>
+          <div>
+            <button class="btn btn-secondary btn-sm" onclick="navigateTo('settings', 'tab-sop')">View Operations SOP Manual</button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Active Employees <span class="nav-badge gold">AG-EMP</span></div>
+            <div class="stat-value" id="kpi-emp">15</div>
+            <div class="stat-subtext">Across 5 specialized departments</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Active Interns <span class="nav-badge">AG-INT</span></div>
+            <div class="stat-value" id="kpi-intern">1</div>
+            <div class="stat-subtext">ML & Robotics domains</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">School Clients <span class="nav-badge">QTN-SCH</span></div>
+            <div class="stat-value" id="kpi-schools">1</div>
+            <div class="stat-subtext">Skill development programs</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Farmer Clients <span class="nav-badge">AG-QUO</span></div>
+            <div class="stat-value" id="kpi-farmers">1</div>
+            <div class="stat-subtext">IoT & Agri Automation</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Total Invoiced <span class="nav-badge">AG-INV</span></div>
+            <div class="stat-value" id="kpi-invoiced">₹78,400</div>
+            <div class="stat-subtext">Official billing records</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Collected Payments <span class="nav-badge">AG-RCP</span></div>
+            <div class="stat-value" id="kpi-collected" style="color: var(--primary);">₹31,360</div>
+            <div class="stat-subtext">Milestone 1 settled</div>
+          </div>
+        </div>
+
+        <!-- RECENT QUOTATIONS & INVOICES -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Recent Quotations & Milestone Billing</div>
+            <div class="panel-actions">
+              <button class="btn btn-secondary btn-sm" onclick="navigateTo('sales')">Open Sales Register</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="enterprise-table">
+              <thead>
+                <tr>
+                  <th>Quotation No</th>
+                  <th>Client / Organization</th>
+                  <th>Total Value</th>
+                  <th>Status</th>
+                  <th>Issue Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-dashboard-quotes">
+                <!-- Loaded via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- RECENT AUDIT LOGS -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">System Audit & Integrity Trail</div>
+            <div class="panel-actions">
+              <span class="code-pill">IMMUTABLE LOGS</span>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="enterprise-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Authorized User</th>
+                  <th>Action</th>
+                  <th>Reference</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody id="table-dashboard-audits">
+                <!-- Loaded via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 2: HR MANAGEMENT                  -->
+      <!-- ========================================== -->
+      <section class="portal-section" id="sec-hr">
+        <div class="manual-banner">
+          <div class="manual-banner-content">
+            <h3><span class="sop-badge">SOP-02</span> Human Resources & Internship Division</h3>
+            <p>Permanent Employee IDs (<code>AG-EMP-YYYY-NNNN</code>) and Intern IDs (<code>AG-INT-YYYY-NNNN</code>). Direct generation of offer letters, experience certificates, and relieving letters.</p>
+          </div>
+          <div style="display:flex; gap:0.5rem;">
+            <button class="btn btn-primary btn-sm" id="btn-add-employee">+ Onboard Employee</button>
+            <button class="btn btn-secondary btn-sm" id="btn-add-intern">+ Register Intern</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="sub-tabs">
+            <button class="sub-tab-btn active" data-hrtab="employees">Company Employees (15)</button>
+            <button class="sub-tab-btn" data-hrtab="interns">Internship Directory (1)</button>
+            <button class="sub-tab-btn" data-hrtab="departments">Departments</button>
+          </div>
+
+          <!-- EMPLOYEES SUBTAB -->
+          <div id="hr-view-employees">
+            <div class="filter-bar">
+              <input type="text" class="search-input" id="search-employees" placeholder="Search by employee name, ID, or designation...">
+              <select class="filter-select" id="filter-dept">
+                <option value="">All Departments</option>
+                <option value="Company Operations">Company Operations</option>
+                <option value="Technical">Technical</option>
+                <option value="Management">Management</option>
+                <option value="Financial">Financial</option>
+                <option value="Technology">Technology</option>
+              </select>
+            </div>
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Employee ID</th>
+                    <th>Full Name</th>
+                    <th>Designation</th>
+                    <th>Department</th>
+                    <th>Joining Date</th>
+                    <th>Contact Details</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="table-employees">
+                  <!-- Populated from server -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- INTERNS SUBTAB -->
+          <div id="hr-view-interns" style="display: none;">
+            <div class="filter-bar">
+              <input type="text" class="search-input" id="search-interns" placeholder="Search interns by name, ID, college, domain, or mentor...">
+            </div>
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Intern ID</th>
+                    <th>Intern Name</th>
+                    <th>College / Institution</th>
+                    <th>Designation / Domain</th>
+                    <th>Tenure Duration</th>
+                    <th>Assigned Mentor</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="table-interns">
+                  <!-- Populated from server -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- DEPARTMENTS SUBTAB -->
+          <div id="hr-view-departments" style="display: none; padding: 1.5rem;">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-label">Company Operations</div>
+                <div class="stat-value">3</div>
+                <div class="stat-subtext">Sabari Krishnan, Dharani Sri, Kavipriya</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Technical & ML</div>
+                <div class="stat-value">8</div>
+                <div class="stat-subtext">Kaviya Sri, Jas Annuncia, Kaarnikkaa, etc.</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Management</div>
+                <div class="stat-value">2</div>
+                <div class="stat-subtext">Harini Sri M, Saman Nihal L R</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Financial</div>
+                <div class="stat-value">1</div>
+                <div class="stat-subtext">Kanika H A (Documentation)</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Technology & Media</div>
+                <div class="stat-value">1</div>
+                <div class="stat-subtext">Raga Shri V S</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 3: CUSTOMER MANAGEMENT            -->
+      <!-- ========================================== -->
+      <section class="portal-section" id="sec-customers">
+        <div class="manual-banner">
+          <div class="manual-banner-content">
+            <h3><span class="sop-badge">SOP-03</span> School & Farmer Client Management</h3>
+            <p>Single client database with dedicated workflows. Schools receive skill development proposals (<code>QTN-YYYY-SCHNN</code>) while Farmers receive IoT & robotics proposals (<code>AG-QUO-YYYY-NNNN</code>).</p>
+          </div>
+          <div>
+            <button class="btn btn-primary btn-sm" id="btn-add-customer">+ Register New Client</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="sub-tabs">
+            <button class="sub-tab-btn active" data-custab="all">All Clients</button>
+            <button class="sub-tab-btn" data-custab="School">School Clients</button>
+            <button class="sub-tab-btn" data-custab="Farmer">Farmer Clients</button>
+          </div>
+
+          <div class="filter-bar">
+            <input type="text" class="search-input" id="search-customers" placeholder="Search by customer name, ID, village, or district...">
+          </div>
+
+          <div class="table-responsive">
+            <table class="enterprise-table">
+              <thead>
+                <tr>
+                  <th>Customer ID</th>
+                  <th>Category</th>
+                  <th>Client / Organization</th>
+                  <th>Contact Person</th>
+                  <th>Location / District</th>
+                  <th>GSTIN / Reg</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-customers">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 4: VENDOR MANAGEMENT              -->
+      <!-- ========================================== -->
+      <section class="portal-section" id="sec-vendors">
+        <div class="manual-banner">
+          <div class="manual-banner-content">
+            <h3><span class="sop-badge">SOP-04</span> Vendor & Supplier Directory</h3>
+            <p>Manage hardware suppliers, PCB fabricators, printing agencies, and raw material providers under atomic series <code>AG-VEN-YYYY-NNNN</code>.</p>
+          </div>
+          <div>
+            <button class="btn btn-primary btn-sm" id="btn-add-vendor">+ Register Vendor</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="filter-bar">
+            <input type="text" class="search-input" id="search-vendors" placeholder="Search vendors by company name, ID, category, or contact...">
+          </div>
+          <div class="table-responsive">
+            <table class="enterprise-table">
+              <thead>
+                <tr>
+                  <th>Vendor ID</th>
+                  <th>Company Name</th>
+                  <th>Category</th>
+                  <th>Contact Person</th>
+                  <th>Email & Phone</th>
+                  <th>GSTIN</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-vendors">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 5: SALES & BUSINESS               -->
+      <!-- ========================================== -->
+      <section class="portal-section" id="sec-sales">
+        <div class="manual-banner">
+          <div class="manual-banner-content">
+            <h3><span class="sop-badge">SOP-05</span> Quotations, Invoices & Payment Ledger</h3>
+            <p>Strict numbering compliance: School Quotations follow <code>QTN-YYYY-SCHNN</code>; Farmer Quotations follow <code>AG-QUO-YYYY-NNNN</code>; Invoices follow <code>AG-INV-YYYY-NNNN</code>. Convert accepted quotes to invoices in one click.</p>
+          </div>
+          <div style="display:flex; gap:0.5rem;">
+            <button class="btn btn-primary btn-sm" id="btn-create-quote">+ Create Quotation</button>
+            <button class="btn btn-secondary btn-sm" id="btn-open-payment-modal">+ Record Payment</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="sub-tabs">
+            <button class="sub-tab-btn active" data-salestab="quotations">Quotations Register</button>
+            <button class="sub-tab-btn" data-salestab="invoices">Invoices & Balances</button>
+            <button class="sub-tab-btn" data-salestab="payments">Payments & Receipts</button>
+            <button class="sub-tab-btn" data-salestab="catalog">Products & Services Catalog</button>
+          </div>
+
+          <!-- QUOTATIONS TAB -->
+          <div id="sales-view-quotations">
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Quote Ref</th>
+                    <th>Category</th>
+                    <th>Client Name</th>
+                    <th>Project Scope</th>
+                    <th>Quotation Value</th>
+                    <th>Signatory</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="table-quotations">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- INVOICES TAB -->
+          <div id="sales-view-invoices" style="display:none;">
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Invoice No</th>
+                    <th>Quotation Ref</th>
+                    <th>Customer Name</th>
+                    <th>Invoice Date</th>
+                    <th>Total Billed</th>
+                    <th>Paid</th>
+                    <th>Balance</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="table-invoices">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- PAYMENTS TAB -->
+          <div id="sales-view-payments" style="display:none;">
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Receipt No</th>
+                    <th>Invoice Ref</th>
+                    <th>Customer Name</th>
+                    <th>Payment Date</th>
+                    <th>Amount Paid</th>
+                    <th>Payment Mode</th>
+                    <th>Transaction Ref</th>
+                  </tr>
+                </thead>
+                <tbody id="table-payments">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- CATALOG TAB -->
+          <div id="sales-view-catalog" style="display:none; padding:1.5rem;">
+            <div class="stats-grid" id="catalog-cards">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 6: DOCUMENT CENTRE                -->
+      <!-- ========================================== -->
+      <section class="portal-section" id="sec-documents">
+        <div class="manual-banner">
+          <div class="manual-banner-content">
+            <h3><span class="sop-badge">SOP-06</span> Official Document Generation & Archival</h3>
+            <p>Generate, preview, and print officially branded documents. Pixel-perfect compliance with AgriGuardian letterhead, MSME registration, and dual-signatory standards.</p>
+          </div>
+          <div>
+            <button class="btn btn-primary btn-sm" id="btn-create-letter">+ Draft Official Document</button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card" style="cursor:pointer; border-left:4px solid var(--accent-gold);" onclick="previewOfficialDoc('landscape-certificate')">
+            <div class="stat-label">Official Certificate <span class="nav-badge gold">LANDSCAPE A4 (297×210mm)</span></div>
+            <div class="stat-value" style="font-size:1.15rem; color:var(--primary);">Internship Completion Certificate</div>
+            <div class="stat-subtext">Prestigious landscape orientation with dual original signatures (Saivignesh R V & Haripriya S), crest & seal</div>
+            <div style="margin-top:0.75rem;"><button class="btn btn-gold btn-sm">🖨️ Preview & Print Landscape</button></div>
+          </div>
+
+          <div class="stat-card" style="cursor:pointer;" onclick="previewOfficialDoc('sample-school-quote')">
+            <div class="stat-label">Official Template <span class="nav-badge gold">REPLICA</span></div>
+            <div class="stat-value" style="font-size:1.15rem;">School Skill Quotation</div>
+            <div class="stat-subtext">Matches QTN-2026-SCH01 with original Course Director signature & remittance details</div>
+            <div style="margin-top:0.75rem;"><button class="btn btn-secondary btn-sm">Preview / Print Sheet</button></div>
+          </div>
+
+          <div class="stat-card" style="cursor:pointer;" onclick="previewOfficialDoc('sample-intern-offer')">
+            <div class="stat-label">Official Template <span class="nav-badge gold">REPLICA</span></div>
+            <div class="stat-value" style="font-size:1.15rem;">Internship Offer Letter</div>
+            <div class="stat-subtext">Matches Kamali B offer letter with original founder signature, UDHAYAM & MSME badge</div>
+            <div style="margin-top:0.75rem;"><button class="btn btn-secondary btn-sm">Preview / Print Letter</button></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Archived Issued Documents Register</div>
+          </div>
+          <div class="table-responsive">
+            <table class="enterprise-table">
+              <thead>
+                <tr>
+                  <th>Doc Number</th>
+                  <th>Document Type</th>
+                  <th>Recipient / Entity</th>
+                  <th>Issue Date</th>
+                  <th>Signatory</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-documents">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 7: APPROVALS                      -->
+      <!-- ========================================== -->
+      <section class="portal-section" id="sec-approvals">
+        <div class="manual-banner">
+          <div class="manual-banner-content">
+            <h3><span class="sop-badge">SOP-07</span> Multi-Tier Approval Governance</h3>
+            <p>Ensure separation of duties. Only authorized Directors or Super Admins can issue official binding quotations and letters.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Pending Document & Quotation Reviews</div>
+          </div>
+          <div class="table-responsive">
+            <table class="enterprise-table">
+              <thead>
+                <tr>
+                  <th>Reference</th>
+                  <th>Type</th>
+                  <th>Target Entity</th>
+                  <th>Created By</th>
+                  <th>Value / Subject</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="table-approvals-pending">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 8: EMAIL & NOTIFICATIONS          -->
+      <!-- ========================================== -->
+      <section class="portal-section" id="sec-emails">
+        <div class="manual-banner">
+          <div class="manual-banner-content">
+            <h3><span class="sop-badge">SOP-08</span> Transactional Email & PDF Delivery Dispatch</h3>
+            <p>Direct email delivery of issued documents to clients, students, and employees with delivery tracking.</p>
+          </div>
+          <div>
+            <button class="btn btn-primary btn-sm" id="btn-trigger-email-modal">+ Send Official Email</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="table-responsive">
+            <table class="enterprise-table">
+              <thead>
+                <tr>
+                  <th>Message ID</th>
+                  <th>Recipient</th>
+                  <th>Subject</th>
+                  <th>Document Ref</th>
+                  <th>Delivery Status</th>
+                  <th>Sent Timestamp</th>
+                </tr>
+              </thead>
+              <tbody id="table-emails">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 9: REPORTS & ANALYTICS            -->
+      <!-- ========================================== -->
+      <section class="portal-section" id="sec-reports">
+        <div class="manual-banner">
+          <div class="manual-banner-content">
+            <h3><span class="sop-badge">SOP-09</span> Operational Analytics & Financial Summary</h3>
+            <p>Auditable summaries distinguishing between quoted volume, invoiced revenue, collected payments, and receivables.</p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Commercial Pipeline</div>
+            <div class="stat-value" id="rep-pipeline">₹78,400</div>
+            <div class="stat-subtext">1 Active School Skill Contract</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Realized Receipts</div>
+            <div class="stat-value" id="rep-receipts" style="color:var(--primary);">₹31,360</div>
+            <div class="stat-subtext">Remitted to Union Bank of India</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Outstanding Balances</div>
+            <div class="stat-value" id="rep-balance" style="color:var(--accent-gold);">₹47,040</div>
+            <div class="stat-subtext">Milestones 2 & 3 pending completion</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 10: SETTINGS & ADMINISTRATION      -->
+      <!-- ========================================== -->
+      <section class="portal-section" id="sec-settings">
+        <div class="manual-banner">
+          <div class="manual-banner-content">
+            <h3><span class="sop-badge">ADMIN-CONTROL</span> Editable Administration Page & System Settings</h3>
+            <p>Customize corporate registration details, banking information, authorized signatories with real digital signatures, and document template clauses in real-time.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="sub-tabs">
+            <button class="sub-tab-btn active" data-settingstab="admin">🏢 Company & Banking</button>
+            <button class="sub-tab-btn" data-settingstab="signatories">✍️ Authorised Signatures</button>
+            <button class="sub-tab-btn" data-settingstab="templates">📝 Document Templates</button>
+            <button class="sub-tab-btn" data-settingstab="sop">📖 Operations SOP Manual</button>
+            <button class="sub-tab-btn" data-settingstab="numbering">🔢 Numbering Rules</button>
+            <button class="sub-tab-btn" data-settingstab="roles">👥 Roles & Permissions</button>
+            <button class="sub-tab-btn" data-settingstab="audit">📜 Audit Trail</button>
+          </div>
+
+          <!-- EDITABLE COMPANY & BANKING ADMINISTRATION -->
+          <div id="settings-view-admin" style="padding:1.5rem;">
+            <form id="form-edit-admin-settings">
+              <div class="panel-title" style="margin-bottom:1rem; color:var(--primary);">
+                <span>1. Corporate Identity & Legal Profile</span>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Company Legal Name</label>
+                  <input type="text" class="form-input" id="set-company-name" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Brand Tagline</label>
+                  <input type="text" class="form-input" id="set-brand-tagline">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">UDYAM / Registration No</label>
+                  <input type="text" class="form-input" id="set-udyam-reg" required>
+                </div>
+                <div class="form-group full-width">
+                  <label class="form-label">Registered Corporate Office</label>
+                  <input type="text" class="form-input" id="set-reg-office" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Primary Operational Email</label>
+                  <input type="email" class="form-input" id="set-primary-email" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Primary Contact Phone</label>
+                  <input type="text" class="form-input" id="set-primary-phone" required>
+                </div>
+              </div>
+
+              <div class="panel-title" style="margin:1.75rem 0 1rem 0; color:var(--primary);">
+                <span>2. Remittance Banking Details (Invoices & Quotations)</span>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Bank Name</label>
+                  <input type="text" class="form-input" id="set-bank-name" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Account Number</label>
+                  <input type="text" class="form-input" id="set-bank-acc" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">IFSC Code</label>
+                  <input type="text" class="form-input" id="set-bank-ifsc" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Branch Name</label>
+                  <input type="text" class="form-input" id="set-bank-branch" required>
+                </div>
+              </div>
+
+              <div style="margin-top:1.5rem; display:flex; justify-content:flex-end;">
+                <button type="submit" class="btn btn-primary">💾 Save Profile & Banking Changes</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- AUTHORISED SIGNATORIES & ORIGINAL SIGNATURES -->
+          <div id="settings-view-signatories" style="display:none; padding:1.5rem;">
+            <div class="manual-banner-content" style="margin-bottom:1rem;">
+              <p>The following are the verified original signatures of AgriGuardian's executive leadership. These signatures are dynamically applied to official Quotations, Internship Offer Letters, and Landscape Certificates of Completion.</p>
+            </div>
+            
+            <div class="stats-grid">
+              <!-- Saivignesh R V -->
+              <div class="signature-card">
+                <div class="signature-preview-box">
+                  <img src="sig-saivignesh.png" alt="Signature of Saivignesh R V">
+                </div>
+                <b style="font-size:0.95rem; color:var(--text-main);">SAIVIGNESH R V</b>
+                <span style="font-size:0.75rem; color:var(--primary); font-weight:700;">FOUNDER & CEO</span>
+                <span class="nav-badge gold" style="margin-top:0.4rem;">PRIMARY SIGNATORY</span>
+                <p style="font-size:0.72rem; color:var(--text-muted); margin-top:0.4rem;">Appears on Quotations, Offer Letters, and Certificate of Completion (Left Authority)</p>
+              </div>
+
+              <!-- Haripriya S -->
+              <div class="signature-card">
+                <div class="signature-preview-box">
+                  <img src="sig-haripriya.png" alt="Signature of Haripriya S">
+                </div>
+                <b style="font-size:0.95rem; color:var(--text-main);">HARIPRIYA S</b>
+                <span style="font-size:0.75rem; color:var(--primary); font-weight:700;">DIRECTOR & CFO</span>
+                <span class="nav-badge" style="margin-top:0.4rem;">FINANCIAL AUTHORITY</span>
+                <p style="font-size:0.72rem; color:var(--text-muted); margin-top:0.4rem;">Appears on Invoices, Payment Receipts, and Certificate of Completion (Right Authority)</p>
+              </div>
+
+              <!-- Shengian T -->
+              <div class="signature-card">
+                <div class="signature-preview-box">
+                  <img src="sig-shengian.png" alt="Signature of Shengian T">
+                </div>
+                <b style="font-size:0.95rem; color:var(--text-main);">SHENGIAN T</b>
+                <span style="font-size:0.75rem; color:var(--primary); font-weight:700;">MANAGING DIRECTOR</span>
+                <span class="nav-badge" style="margin-top:0.4rem;">EXECUTIVE DIRECTOR</span>
+                <p style="font-size:0.72rem; color:var(--text-muted); margin-top:0.4rem;">Authorized for statutory commercial agreements and corporate partnerships</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- DOCUMENT TEMPLATES TEXT EDITOR -->
+          <div id="settings-view-templates" style="display:none; padding:1.5rem;">
+            <form id="form-edit-doc-templates">
+              <div class="form-group full-width" style="margin-bottom:1.25rem;">
+                <label class="form-label">Quotation Commercial Terms & Inclusions</label>
+                <textarea class="form-textarea" id="set-quote-terms" rows="3"></textarea>
+              </div>
+
+              <div class="form-group full-width" style="margin-bottom:1.25rem;">
+                <label class="form-label">Internship Offer Letter Standard Body Text</label>
+                <textarea class="form-textarea" id="set-offer-terms" rows="4"></textarea>
+              </div>
+
+              <div class="form-group full-width" style="margin-bottom:1.25rem;">
+                <label class="form-label">Landscape Certificate Commendation & Body Clause</label>
+                <textarea class="form-textarea" id="set-cert-text" rows="3"></textarea>
+              </div>
+
+              <div style="display:flex; justify-content:flex-end;">
+                <button type="submit" class="btn btn-primary">💾 Save Document Templates</button>
+              </div>
+            </form>
+          </div>
+
+
+          <!-- NUMBERING RULES VIEW -->
+          <div id="settings-view-numbering" style="display:none;">
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Record Type</th>
+                    <th>Category</th>
+                    <th>Format Pattern</th>
+                    <th>Example</th>
+                    <th>Seq Length</th>
+                    <th>Annual Reset</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>School Quotation</b></td>
+                    <td><span class="status-badge school">School</span></td>
+                    <td><code>QTN-YYYY-SCHNN</code></td>
+                    <td><code>QTN-2026-SCH01</code></td>
+                    <td>2 Digits</td>
+                    <td>Enabled</td>
+                    <td><span class="status-badge active">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><b>Farmer Quotation</b></td>
+                    <td><span class="status-badge farmer">Farmer</span></td>
+                    <td><code>AG-QUO-YYYY-NNNN</code></td>
+                    <td><code>AG-QUO-2026-0001</code></td>
+                    <td>4 Digits</td>
+                    <td>Enabled</td>
+                    <td><span class="status-badge active">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><b>Invoice</b></td>
+                    <td>All Clients</td>
+                    <td><code>AG-INV-YYYY-NNNN</code></td>
+                    <td><code>AG-INV-2026-0001</code></td>
+                    <td>4 Digits</td>
+                    <td>Enabled</td>
+                    <td><span class="status-badge active">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><b>Payment Receipt</b></td>
+                    <td>Finance</td>
+                    <td><code>AG-RCP-YYYY-NNNN</code></td>
+                    <td><code>AG-RCP-2026-0001</code></td>
+                    <td>4 Digits</td>
+                    <td>Enabled</td>
+                    <td><span class="status-badge active">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><b>Employee ID</b></td>
+                    <td>HR</td>
+                    <td><code>AG-EMP-YYYY-NNNN</code></td>
+                    <td><code>AG-EMP-2026-0001</code></td>
+                    <td>4 Digits</td>
+                    <td>Continuous</td>
+                    <td><span class="status-badge active">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><b>Intern ID</b></td>
+                    <td>HR</td>
+                    <td><code>AG-INT-YYYY-NNNN</code></td>
+                    <td><code>AG-INT-2026-0001</code></td>
+                    <td>4 Digits</td>
+                    <td>Continuous</td>
+                    <td><span class="status-badge active">Active</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- USER ROLES VIEW -->
+          <div id="settings-view-roles" style="display:none; padding:1.5rem;">
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Role Persona</th>
+                    <th>Assigned Principal</th>
+                    <th>Permissions & Responsibilities</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>Super Admin</b></td>
+                    <td>Saivignesh R V</td>
+                    <td>Full access to all modules, numbering rules, settings, approvals, and audits</td>
+                  </tr>
+                  <tr>
+                    <td><b>HR Manager</b></td>
+                    <td>Harini Sri M</td>
+                    <td>Employee and intern records, offer letters, completion certificates</td>
+                  </tr>
+                  <tr>
+                    <td><b>Finance Manager</b></td>
+                    <td>Haripriya S / Kanika H A</td>
+                    <td>Quotations, invoice conversion, recording payments, receipt generation</td>
+                  </tr>
+                  <tr>
+                    <td><b>Sales Executive</b></td>
+                    <td>Sabari Krishnan I</td>
+                    <td>Customer onboarding, school and farmer quotation generation</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- AUDIT LOGS VIEW -->
+          <div id="settings-view-audit" style="display:none;">
+            <div class="table-responsive">
+              <table class="enterprise-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Entity</th>
+                    <th>Ref</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody id="table-settings-audits">
+                  <!-- Loaded via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: DOCUMENT PREVIEW & PRINT (QUOTATION / LETTERS)    -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="modal-doc-viewer">
+    <div class="modal-card" style="max-width: 1250px; width: 96vw;">
+      <div class="modal-header">
+        <h3 id="doc-viewer-modal-title">Official Document Preview</h3>
+        <div style="display:flex; gap:0.5rem; align-items:center;">
+          <button class="btn btn-gold btn-sm" onclick="window.print()">🖨️ Print Sheet / Save PDF</button>
+          <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-doc-viewer')">Close</button>
+        </div>
+      </div>
+      <div class="doc-preview-modal-body" id="doc-preview-container">
+        <!-- Rendered sheet will be injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: CREATE QUOTATION (WITH COHORTS & MILESTONES)      -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="modal-create-quotation">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Create Branded Quotation</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-create-quotation')">✕</button>
+      </div>
+      <form id="form-create-quote">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Client Category</label>
+              <select class="form-select" id="quote-category" required>
+                <option value="School">School Client (Format: QTN-YYYY-SCHNN)</option>
+                <option value="Farmer">Farmer Client (Format: AG-QUO-YYYY-NNNN)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Select Client</label>
+              <select class="form-select" id="quote-customer-select" required>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Project / Proposal Scope Title</label>
+              <input type="text" class="form-input" id="quote-project-title" value="3-Month Student Skill Development Program" required>
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Target Cohort / Beneficiaries</label>
+              <input type="text" class="form-input" id="quote-target-cohort" value="Classes 6th, 7th, 8th & 9th (Total: 196 Students)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Total Student / Beneficiary Strength</label>
+              <input type="number" class="form-input" id="quote-calc-strength" value="196">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Course Fee / Unit Price (₹)</label>
+              <input type="number" class="form-input" id="quote-calc-rate" value="400">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Calculated Subtotal (₹)</label>
+              <input type="text" class="form-input" id="quote-calc-total" value="78400" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Authorized Signatory</label>
+              <select class="form-select" id="quote-signatory">
+                <option value="Saivignesh R V - Founder / Course Director">Saivignesh R V - Founder / Course Director</option>
+                <option value="Haripriya S - Director (CFO)">Haripriya S - Director (CFO)</option>
+                <option value="Shengian T - Managing Director">Shengian T - Managing Director</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-create-quotation')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Generate & Save Quotation</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ADD EMPLOYEE                                      -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="modal-add-employee">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Onboard New Employee</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-add-employee')">✕</button>
+      </div>
+      <form id="form-add-employee">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" id="emp-name" required placeholder="e.g. Arun Kumar S">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <select class="form-select" id="emp-dept" required>
+                <option value="Company Operations">Company Operations</option>
+                <option value="Technical">Technical</option>
+                <option value="Management">Management</option>
+                <option value="Financial">Financial</option>
+                <option value="Technology">Technology</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Designation</label>
+              <input type="text" class="form-input" id="emp-designation" required placeholder="e.g. Embedded Systems Engineer">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Joining Date</label>
+              <input type="date" class="form-input" id="emp-joining" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="emp-email" placeholder="arun@agriguardian.in">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="text" class="form-input" id="emp-phone" placeholder="+91 98400 11223">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-add-employee')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Generate AG-EMP ID & Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ADD INTERN                                        -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="modal-add-intern">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Register New Intern</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-add-intern')">✕</button>
+      </div>
+      <form id="form-add-intern">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Intern Full Name</label>
+              <input type="text" class="form-input" id="intern-name" required placeholder="e.g. Kamali B">
+            </div>
+            <div class="form-group">
+              <label class="form-label">College / Institution</label>
+              <input type="text" class="form-input" id="intern-college" required placeholder="e.g. Panimalar Engineering College, Chennai">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Designation / Role</label>
+              <input type="text" class="form-input" id="intern-designation" value="Machine Learning Intern" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Assigned Mentor</label>
+              <select class="form-select" id="intern-mentor">
+                <option value="Jas Annuncia M">Jas Annuncia M (ML Engineer)</option>
+                <option value="Kaarnikkaa S">Kaarnikkaa S (Integration Engineer)</option>
+                <option value="Rishi Kumar J">Rishi Kumar J (Geospatial Engineer)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Start Date</label>
+              <input type="date" class="form-input" id="intern-start" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">End Date</label>
+              <input type="date" class="form-input" id="intern-end" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-add-intern')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Generate AG-INT ID & Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ADD CUSTOMER                                      -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="modal-add-customer">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Register Client (School or Farmer)</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-add-customer')">✕</button>
+      </div>
+      <form id="form-add-customer">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Customer Category</label>
+              <select class="form-select" id="cust-category" required>
+                <option value="School">School Client</option>
+                <option value="Farmer">Farmer Client</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Client / Farm / School Name</label>
+              <input type="text" class="form-input" id="cust-name" required placeholder="e.g. Don Bosco Matriculation School">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Person</label>
+              <input type="text" class="form-input" id="cust-contact" placeholder="Principal / Farm Owner">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="cust-email" placeholder="contact@institution.edu">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="text" class="form-input" id="cust-phone" placeholder="+91 98401 22334">
+            </div>
+            <div class="form-group">
+              <label class="form-label">District / State</label>
+              <input type="text" class="form-input" id="cust-district" placeholder="Chennai / Coimbatore, Tamil Nadu">
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Full Address</label>
+              <input type="text" class="form-input" id="cust-address" placeholder="Street, landmark, pincode">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-add-customer')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Client (AG-CUS ID)</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: RECORD PAYMENT                                    -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="modal-record-payment">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Record Client Payment & Issue Receipt</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-record-payment')">✕</button>
+      </div>
+      <form id="form-record-payment">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label class="form-label">Select Invoice</label>
+              <select class="form-select" id="pay-invoice-select" required>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Amount Paid (₹)</label>
+              <input type="number" class="form-input" id="pay-amount" required placeholder="e.g. 23520">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Payment Mode</label>
+              <select class="form-select" id="pay-mode">
+                <option value="NEFT / RTGS Bank Transfer">NEFT / RTGS Bank Transfer</option>
+                <option value="UPI / QR Code">UPI / QR Code</option>
+                <option value="Cheque / DD">Cheque / Demand Draft</option>
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Bank Transaction Reference / UTR</label>
+              <input type="text" class="form-input" id="pay-ref" placeholder="e.g. UBINR52026102600123" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-record-payment')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Generate Receipt & Update Balance</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: EDIT EMPLOYEE                                     -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="modal-edit-employee">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Edit Employee Details</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-edit-employee')">✕</button>
+      </div>
+      <form id="form-edit-employee">
+        <input type="hidden" id="edit-emp-id">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" id="edit-emp-name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <select class="form-select" id="edit-emp-dept" required>
+                <option value="Company Operations">Company Operations</option>
+                <option value="Technical">Technical</option>
+                <option value="Management">Management</option>
+                <option value="Financial">Financial</option>
+                <option value="Technology">Technology</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Designation</label>
+              <input type="text" class="form-input" id="edit-emp-designation" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Joining Date</label>
+              <input type="date" class="form-input" id="edit-emp-joining" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="edit-emp-email">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="text" class="form-input" id="edit-emp-phone">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Salary / Compensation</label>
+              <input type="text" class="form-input" id="edit-emp-salary">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select class="form-select" id="edit-emp-status">
+                <option value="Active">Active</option>
+                <option value="On Leave">On Leave</option>
+                <option value="Relieved">Relieved</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-edit-employee')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Employee</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: EDIT CUSTOMER                                     -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="modal-edit-customer">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Edit Client Record</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-edit-customer')">✕</button>
+      </div>
+      <form id="form-edit-customer">
+        <input type="hidden" id="edit-cust-id">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Customer Category</label>
+              <select class="form-select" id="edit-cust-category" required>
+                <option value="School">School Client</option>
+                <option value="Farmer">Farmer Client</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Client Name</label>
+              <input type="text" class="form-input" id="edit-cust-name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Person</label>
+              <input type="text" class="form-input" id="edit-cust-contact">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="edit-cust-email">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="text" class="form-input" id="edit-cust-phone">
+            </div>
+            <div class="form-group">
+              <label class="form-label">District</label>
+              <input type="text" class="form-input" id="edit-cust-district">
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Full Address</label>
+              <input type="text" class="form-input" id="edit-cust-address">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-edit-customer')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Client Details</button>
+        </div>
+      </form>
+    </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: EDIT INTERN                                       -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="modal-edit-intern">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Edit Intern Record</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-edit-intern')">✕</button>
+      </div>
+      <form id="form-edit-intern">
+        <input type="hidden" id="edit-intern-id">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Intern Full Name</label>
+              <input type="text" class="form-input" id="edit-intern-name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">College / Institution</label>
+              <input type="text" class="form-input" id="edit-intern-college" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Internship Designation</label>
+              <input type="text" class="form-input" id="edit-intern-designation" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Domain Area</label>
+              <input type="text" class="form-input" id="edit-intern-domain">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Start Date</label>
+              <input type="date" class="form-input" id="edit-intern-start" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">End Date</label>
+              <input type="date" class="form-input" id="edit-intern-end" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Assigned Mentor</label>
+              <input type="text" class="form-input" id="edit-intern-mentor">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Stipend Status</label>
+              <select class="form-select" id="edit-intern-stipend">
+                <option value="Performance Stipend">Performance Stipend</option>
+                <option value="Fixed Monthly Stipend">Fixed Monthly Stipend</option>
+                <option value="Unpaid / Academic Credit">Unpaid / Academic Credit</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="edit-intern-email">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="text" class="form-input" id="edit-intern-phone">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Internship Status</label>
+              <select class="form-select" id="edit-intern-status">
+                <option value="Active">Active</option>
+                <option value="Completed">Completed</option>
+                <option value="Extended">Extended</option>
+                <option value="Withdrawn">Withdrawn</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-edit-intern')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Intern Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: ADD VENDOR                                        -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="modal-add-vendor">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Register New Vendor / Component Supplier</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-add-vendor')">✕</button>
+      </div>
+      <form id="form-add-vendor">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Company / Vendor Name</label>
+              <input type="text" class="form-input" id="vendor-name" required placeholder="e.g. RoboTech Components Pvt Ltd">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Supply Category</label>
+              <select class="form-select" id="vendor-category">
+                <option value="IoT & Electronics">IoT & Electronics</option>
+                <option value="Mechanical & Fabrication">Mechanical & Fabrication</option>
+                <option value="Drone Components">Drone Components</option>
+                <option value="Printing & Stationery">Printing & Stationery</option>
+                <option value="Software & Cloud">Software & Cloud</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Person</label>
+              <input type="text" class="form-input" id="vendor-contact" placeholder="Account Manager / Contact">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="vendor-email" placeholder="vendor@supplier.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="text" class="form-input" id="vendor-phone" placeholder="+91 98410 00000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">GSTIN / Tax ID</label>
+              <input type="text" class="form-input" id="vendor-gstin" placeholder="33AAAAA0000A1Z5">
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Office / Warehouse Address</label>
+              <input type="text" class="form-input" id="vendor-address" placeholder="Industrial Estate, City, State">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-add-vendor')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Vendor Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: EDIT VENDOR                                       -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="modal-edit-vendor">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Edit Vendor Details</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-edit-vendor')">✕</button>
+      </div>
+      <form id="form-edit-vendor">
+        <input type="hidden" id="edit-vendor-id">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Company / Vendor Name</label>
+              <input type="text" class="form-input" id="edit-vendor-name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Supply Category</label>
+              <select class="form-select" id="edit-vendor-category">
+                <option value="IoT & Electronics">IoT & Electronics</option>
+                <option value="Mechanical & Fabrication">Mechanical & Fabrication</option>
+                <option value="Drone Components">Drone Components</option>
+                <option value="Printing & Stationery">Printing & Stationery</option>
+                <option value="Software & Cloud">Software & Cloud</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Person</label>
+              <input type="text" class="form-input" id="edit-vendor-contact">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="edit-vendor-email">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="text" class="form-input" id="edit-vendor-phone">
+            </div>
+            <div class="form-group">
+              <label class="form-label">GSTIN / Tax ID</label>
+              <input type="text" class="form-input" id="edit-vendor-gstin">
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Address</label>
+              <input type="text" class="form-input" id="edit-vendor-address">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select class="form-select" id="edit-vendor-status">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="Blacklisted">Blacklisted</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-edit-vendor')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Vendor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
