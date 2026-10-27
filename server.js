@@ -1151,6 +1151,81 @@ app.get('/api/documents', async (req, res) => {
   }
 });
 
+app.get('/api/documents/:id', async (req, res) => {
+  try {
+    const docId = parseInt(req.params.id, 10);
+    const doc = await get(`SELECT * FROM documents WHERE id = ?`, [docId]);
+    if (!doc) return res.status(404).json({ error: 'Document not found' });
+    res.json(doc);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/documents', async (req, res) => {
+  try {
+    const {
+      doc_type, category, recipient_name, recipient_sub, subject, body,
+      signatory, signatory_title, issue_date, valid_until, status, meta_json, author
+    } = req.body;
+
+    const year = new Date().getFullYear();
+    let prefix = 'DOC';
+    const typeLower = String(doc_type || '').toLowerCase();
+    if (typeLower.includes('cert')) prefix = 'CERT';
+    else if (typeLower.includes('intern') && typeLower.includes('offer')) prefix = 'INT-OFF';
+    else if (typeLower.includes('offer')) prefix = 'EMP-OFF';
+    else if (typeLower.includes('appoint')) prefix = 'APT';
+    else if (typeLower.includes('experience') || typeLower.includes('relieving')) prefix = 'EXP';
+    else if (typeLower.includes('salary')) prefix = 'SAL-CERT';
+
+    const seq = await getNextNumber(prefix, year);
+    const doc_no = `AG-${prefix}-${year}-${String(seq).padStart(4, '0')}`;
+    const now = new Date().toISOString().replace('T', ' ').substring(0, 19);
+
+    const result = await run(`
+      INSERT INTO documents (
+        doc_no, doc_type, category, recipient_name, recipient_sub, subject,
+        body, signatory, signatory_title, issue_date, valid_until, status, meta_json, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [
+      doc_no,
+      doc_type || 'Official Letter',
+      category || 'Official Correspondence',
+      recipient_name || 'Recipient',
+      recipient_sub || '',
+      subject || `${doc_type || 'Official Document'} - ${recipient_name || ''}`,
+      body || '',
+      signatory || 'SAIVIGNESH R V',
+      signatory_title || 'FOUNDER & CEO',
+      issue_date || now.substring(0, 10),
+      valid_until || '-',
+      status || 'Issued',
+      typeof meta_json === 'object' ? JSON.stringify(meta_json) : (meta_json || '{}'),
+      now
+    ]);
+
+    await logAudit(author || 'Director / Admin', 'ISSUE_DOCUMENT', 'Document', doc_no, `Generated ${doc_type} for ${recipient_name}`);
+    res.status(201).json({ ok: true, id: result.lastID, doc_no });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/documents/:id', async (req, res) => {
+  try {
+    const docId = parseInt(req.params.id, 10);
+    const doc = await get(`SELECT doc_no, recipient_name FROM documents WHERE id = ?`, [docId]);
+    await run(`DELETE FROM documents WHERE id = ?`, [docId]);
+    if (doc) {
+      await logAudit('Admin', 'DELETE_DOCUMENT', 'Document', doc.doc_no, `Deleted document issued to ${doc.recipient_name}`);
+    }
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Approvals
 app.get('/api/approvals', async (req, res) => {
   try {

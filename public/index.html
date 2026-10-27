@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>AgriGuardian Private Limited — Company Management Portal & Operations Manual</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="logo-shield.png">
@@ -57,8 +57,11 @@
     </div>
   </div>
 
+  <!-- BACKDROP FOR MOBILE DRAWER NAVIGATION -->
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
   <!-- SIDEBAR NAVIGATION -->
-  <aside>
+  <aside id="portal-sidebar">
     <div class="brand-header">
       <img src="logo-shield.png" alt="AgriGuardian Logo" class="brand-logo">
       <div class="brand-title">
@@ -66,6 +69,7 @@
         <span class="tagline">A Farmer's Product</span>
         <span class="manual-tag">ERP & SOP MANUAL v2.4</span>
       </div>
+      <button class="sidebar-close-btn" id="btn-sidebar-close" aria-label="Close Navigation" type="button" title="Close Menu">✕</button>
     </div>
 
     <nav class="sidebar-nav">
@@ -141,6 +145,7 @@
     
     <!-- TOP HEADER -->
     <header class="top-bar">
+      <button class="mobile-menu-toggle" id="btn-mobile-toggle" aria-label="Open Navigation" aria-expanded="false" type="button" title="Open Navigation Menu">☰</button>
       <div class="page-headline">
         <span class="page-eyebrow" id="page-eyebrow">
           <span>OPERATIONS HUB</span> • <span>AGRIGUARDIAN PRIVATE LIMITED</span>
@@ -1054,6 +1059,149 @@
       <div class="doc-preview-modal-body" id="doc-preview-container">
         <!-- Rendered sheet will be injected here -->
       </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: DRAFT OFFICIAL DOCUMENT (LETTERS & CERTIFICATES)  -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="modal-draft-document">
+    <div class="modal-card" style="max-width: 980px; width: 95vw; max-height: 92dvh; overflow-y: auto;">
+      <div class="modal-header">
+        <div>
+          <h3 style="font-size:1.25rem; font-weight:700; color:var(--primary); margin:0;">Draft Official AgriGuardian Document</h3>
+          <p style="font-size:0.82rem; color:var(--text-muted); margin-top:2px; margin-bottom:0;">
+            Generate, customize, preview, and issue official corporate letters & certificates with authentic branding and signatures.
+          </p>
+        </div>
+        <button class="btn btn-secondary btn-sm" type="button" onclick="closeModal('modal-draft-document')">✕</button>
+      </div>
+
+      <form id="form-draft-document">
+        <div class="modal-body" style="padding: 1.25rem;">
+          
+          <!-- Row 1: Document Type & Quick-Autofill -->
+          <div class="form-row-2" style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+            <div class="form-group">
+              <label class="form-label" style="font-weight:700; color:var(--primary);">Document Type *</label>
+              <select id="draft-doc-type" class="form-select" required style="font-weight:600;">
+                <option value="Employee Offer Letter">Employee Offer Letter (Full-Time / Probational)</option>
+                <option value="Internship Offer Letter">Internship Offer Letter</option>
+                <option value="Internship Completion Certificate">Internship Completion Certificate (Landscape A4 — 297×210mm)</option>
+                <option value="Appointment Letter">Appointment Letter</option>
+                <option value="Experience & Relieving Letter">Experience & Relieving Letter</option>
+                <option value="Salary Certificate">Salary Certificate / Proof of Earnings</option>
+                <option value="Quotation Cover Letter">Quotation Cover Letter</option>
+                <option value="General Official Letter">General Official Letter / Memorandum</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-weight:700; color:var(--primary);">⚡ Quick-Autofill from Directory</label>
+              <select id="draft-quick-entity" class="form-select">
+                <option value="">-- Choose Employee or Intern to Auto-Fill --</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Card 1: Recipient & Tenure Details -->
+          <div style="background:var(--bg-surface-subtle); padding:1.1rem; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:1.25rem;">
+            <h4 style="font-size:0.85rem; font-weight:700; text-transform:uppercase; color:var(--primary); margin-bottom:0.85rem; letter-spacing:0.04em;">
+              👤 Recipient & Engagement Profile
+            </h4>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:0.85rem;">
+              <div class="form-group">
+                <label class="form-label">Recipient Full Name *</label>
+                <input type="text" id="draft-recipient-name" class="form-input" placeholder="e.g. Kamali B / Harish S" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Institution / College / Residential Address</label>
+                <input type="text" id="draft-recipient-sub" class="form-input" placeholder="e.g. Panimalar Engineering College, Chennai">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Designation / Technical Domain *</label>
+                <input type="text" id="draft-designation" class="form-input" placeholder="e.g. Machine Learning Engineer / Applied AI" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Department</label>
+                <select id="draft-department" class="form-select">
+                  <option value="AI & Robotics">AI & Robotics</option>
+                  <option value="Agronomy & Field Operations">Agronomy & Field Operations</option>
+                  <option value="Software & Cloud Engineering">Software & Cloud Engineering</option>
+                  <option value="Hardware & Embedded Systems">Hardware & Embedded Systems</option>
+                  <option value="Sales & Business Development">Sales & Business Development</option>
+                  <option value="Corporate Administration & HR">Corporate Administration & HR</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Start Date / Joining Date *</label>
+                <input type="date" id="draft-start-date" class="form-input" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">End Date / Tenure Completion</label>
+                <input type="date" id="draft-end-date" class="form-input">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Compensation / Stipend / CTC</label>
+                <input type="text" id="draft-compensation" class="form-input" placeholder="e.g. ₹4,20,000 per annum / ₹10,000 per month">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Mentor / Reporting Manager</label>
+                <input type="text" id="draft-mentor" class="form-input" placeholder="e.g. Saivignesh R V / Jas Annuncia M">
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Legal Signatory & Governance -->
+          <div style="background:var(--bg-surface-subtle); padding:1.1rem; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:1.25rem;">
+            <h4 style="font-size:0.85rem; font-weight:700; text-transform:uppercase; color:var(--primary); margin-bottom:0.85rem; letter-spacing:0.04em;">
+              ✍️ Signatory Authority & Governance
+            </h4>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:0.85rem;">
+              <div class="form-group">
+                <label class="form-label">Authorized Signatory *</label>
+                <select id="draft-signatory" class="form-select">
+                  <option value="SAIVIGNESH R V|FOUNDER & CEO|sig-saivignesh.png">Saivignesh R V — Founder & CEO</option>
+                  <option value="HARIPRIYA S|DIRECTOR (CFO)|sig-haripriya.png">Haripriya S — Director & CFO</option>
+                  <option value="SHENGIAN T|DIRECTOR (MD)|sig-shengian.png">Shengian T — Director & MD</option>
+                  <option value="DUAL|SAIVIGNESH R V & HARIPRIYA S|dual">Dual Signatory: Saivignesh R V & Haripriya S (Board Seal)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Issue Date *</label>
+                <input type="date" id="draft-issue-date" class="form-input" required>
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label class="form-label">Document Subject Line *</label>
+                <input type="text" id="draft-subject" class="form-input" placeholder="e.g. OFFER OF EMPLOYMENT — Machine Learning Engineer" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Custom Document Body -->
+          <div class="form-group" style="margin-bottom:0.5rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem; flex-wrap:wrap; gap:0.5rem;">
+              <label class="form-label" style="font-weight:700; margin:0; color:var(--text-main);">
+                📜 Document Body & Legal Terms (Editable)
+              </label>
+              <button type="button" class="btn btn-secondary btn-xs" id="btn-reset-draft-body">🔄 Reset to Standard Template</button>
+            </div>
+            <textarea id="draft-body" class="form-input" rows="8" style="font-family:var(--font-sans); line-height:1.55; font-size:0.88rem; width:100%;" placeholder="Legal clauses and narrative details will appear here automatically..."></textarea>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+              💡 The body text automatically configures for the selected Document Type and fills in recipient details in real time. You can edit any sentence before issuing.
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; padding:1rem 1.25rem; border-top:1px solid var(--border-color);">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-draft-document')">Cancel</button>
+          <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+            <button type="button" class="btn btn-gold" id="btn-preview-draft-doc">👁️ Live Preview</button>
+            <button type="submit" class="btn btn-primary" id="btn-submit-draft-doc">💾 Save & Issue Official Document</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 
