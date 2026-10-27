@@ -2128,70 +2128,207 @@ body.unauthenticated {
   }
 }
 
-/* PRINT MEDIA QUERY FOR HARD COPY OR PDF */
+/* =========================================================================
+   CLEAN OFFICIAL PRINT & PDF EXPORT STYLES
+   Ensures ONLY the document sheet or certificate is printed, ZERO website UI
+   ========================================================================= */
 @media print {
   @page {
     size: auto;
-    margin: 0mm;
+    margin: 0;
   }
-  @page landscape {
-    size: A4 landscape;
-    margin: 0mm;
-  }
-  body {
+
+  html, body {
     background: #ffffff !important;
     color: #000000 !important;
     padding: 0 !important;
     margin: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
-  aside, header.top-bar, .modal-header, .modal-footer, .filter-bar, .btn, .sub-tabs, .manual-banner,
-  .sidebar-nav, .portal-header, .stat-grid, .portal-section:not(#sec-documents), .modal-overlay:not(.active) {
+
+  /* 1. HIDE ENTIRE WEBSITE PORTAL APPLICATION CHROME */
+  #login-gate,
+  #sidebar-backdrop,
+  #portal-sidebar,
+  aside,
+  header,
+  header.top-bar,
+  main,
+  main.portal-content,
+  .portal-layout,
+  .portal-section,
+  #sec-dashboard,
+  #sec-hr,
+  #sec-customers,
+  #sec-vendors,
+  #sec-sales,
+  #sec-finance,
+  #sec-documents,
+  #sec-inventory,
+  #sec-manual,
+  .manual-banner,
+  .stats-grid,
+  .stat-card,
+  .filter-bar,
+  .sub-tabs,
+  .btn,
+  .global-search-box,
+  .global-search-dropdown,
+  .panel,
+  .table-responsive {
     display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
   }
-  .modal-overlay.active {
+
+  /* 2. HIDE ALL OTHER MODALS (DRAFT FORM, EDIT MODALS, ETC.) */
+  .modal-overlay:not(#modal-doc-viewer),
+  #modal-draft-document,
+  #modal-create-quotation,
+  #modal-add-employee,
+  #modal-add-intern,
+  #modal-add-customer,
+  #modal-add-vendor,
+  #modal-edit-employee,
+  #modal-edit-intern,
+  #modal-edit-customer,
+  #modal-edit-vendor,
+  #modal-record-payment {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* 3. INSIDE DOCUMENT VIEWER MODAL: HIDE MODAL HEADER & ACTION BUTTONS */
+  #modal-doc-viewer .modal-header,
+  #modal-doc-viewer .modal-footer,
+  #modal-doc-viewer button {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* 4. ISOLATE MODAL CONTAINER AS PURE TRANSPARENT FULL-PAGE HOLDER */
+  #modal-doc-viewer {
     display: block !important;
+    visibility: visible !important;
     position: static !important;
-    background: transparent !important;
+    background: #ffffff !important;
     padding: 0 !important;
     margin: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100% !important;
     overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+    opacity: 1 !important;
+    z-index: 999999 !important;
   }
-  .modal-card {
+
+  #modal-doc-viewer .modal-card {
+    display: block !important;
+    visibility: visible !important;
+    position: static !important;
+    background: #ffffff !important;
     max-width: 100% !important;
     width: 100% !important;
-    border: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    padding: 0 !important;
+    height: auto !important;
     margin: 0 !important;
-  }
-  main.portal-content, .viewport-body, .doc-preview-modal-body, .cert-landscape-wrapper {
-    position: static !important;
     padding: 0 !important;
-    margin: 0 !important;
-    background: transparent !important;
     overflow: visible !important;
-    display: block !important;
-  }
-  .a4-document-sheet {
     box-shadow: none !important;
+    border: none !important;
+  }
+
+  #doc-preview-container,
+  .doc-preview-modal-body {
+    display: block !important;
+    visibility: visible !important;
+    position: static !important;
+    background: #ffffff !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* 5. A4 PORTRAIT DOCUMENT SHEET */
+  .a4-document-sheet {
+    display: block !important;
+    visibility: visible !important;
+    box-shadow: none !important;
+    border: none !important;
     margin: 0 auto !important;
     width: 210mm !important;
+    max-width: 210mm !important;
     min-height: 297mm !important;
-    padding: 10mm 15mm !important;
-    page-break-after: avoid;
-    break-after: avoid;
+    padding: 12mm 16mm !important;
+    box-sizing: border-box !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    background: #ffffff !important;
+    color: #000000 !important;
   }
+
+  /* 6. A4 LANDSCAPE CERTIFICATE SHEET */
   .a4-landscape-sheet {
+    display: block !important;
+    visibility: visible !important;
     page: landscape;
     box-shadow: none !important;
+    border: 3px double #0d5c3a !important;
     margin: 0 auto !important;
     width: 297mm !important;
+    max-width: 297mm !important;
     height: 210mm !important;
     min-height: 210mm !important;
     padding: 8mm 12mm !important;
-    page-break-after: avoid;
-    break-after: avoid;
+    box-sizing: border-box !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .cert-landscape-wrapper {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    width: 100% !important;
+  }
+
+  /* High fidelity print color preservation */
+  .doc-header-brand h1 {
+    color: #0d5c3a !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+  .doc-ribbon-bar {
+    background: #0d5c3a !important;
+    color: #ffffff !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+  .cert-border-outer {
+    border-color: #0d5c3a !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+  .cert-border-inner {
+    border-color: #d4af37 !important;
+    -webkit-print-color-adjust: exact !important;
   }
 }
 

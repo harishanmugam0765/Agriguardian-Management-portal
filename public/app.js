@@ -209,6 +209,14 @@ async function loadDashboard() {
       </tr>
     `).join('');
   }
+
+  // Proactive background pre-fetch for Directory autofill
+  if (!State.employees || State.employees.length === 0) {
+    API.get('/api/employees').then(emps => { if (emps && Array.isArray(emps)) { State.employees = emps; populateDraftDirectoryDropdown(); } });
+  }
+  if (!State.interns || State.interns.length === 0) {
+    API.get('/api/interns').then(ints => { if (ints && Array.isArray(ints)) { State.interns = ints; populateDraftDirectoryDropdown(); } });
+  }
 }
 
 async function loadHR() {
@@ -217,6 +225,7 @@ async function loadHR() {
 
   State.employees = employees || [];
   State.interns = interns || [];
+  populateDraftDirectoryDropdown();
 
   renderEmployeesTable(State.employees);
   renderInternsTable(State.interns);
@@ -418,8 +427,16 @@ async function loadSales() {
 }
 
 async function loadDocuments() {
-  const docs = await API.get('/api/documents');
+  const [docs, emps, interns] = await Promise.all([
+    API.get('/api/documents'),
+    (!State.employees || State.employees.length === 0) ? API.get('/api/employees') : Promise.resolve(State.employees),
+    (!State.interns || State.interns.length === 0) ? API.get('/api/interns') : Promise.resolve(State.interns)
+  ]);
   State.documents = docs || [];
+  if (emps && Array.isArray(emps)) State.employees = emps;
+  if (interns && Array.isArray(interns)) State.interns = interns;
+  populateDraftDirectoryDropdown();
+
   const tbody = $('#table-documents');
   if (!tbody) return;
   if (State.documents.length === 0) {
@@ -2046,33 +2063,53 @@ function previewDraftFromForm() {
   openModal('modal-doc-viewer');
 }
 
+// Populate Directory quick autofill dropdown
+function populateDraftDirectoryDropdown() {
+  const quickSelect = $('#draft-quick-entity');
+  if (!quickSelect) return;
+  let opts = '<option value="">-- Choose Employee or Intern to Auto-Fill --</option>';
+  if (State.employees && State.employees.length > 0) {
+    opts += '<optgroup label="Registered Employees (Staff Directory)">';
+    State.employees.forEach(emp => {
+      opts += `<option value="emp:${emp.id}">[Staff] ${escapeHTML(emp.name)} (${escapeHTML(emp.employee_code || '')}) — ${escapeHTML(emp.designation || 'Specialist')}</option>`;
+    });
+    opts += '</optgroup>';
+  }
+  if (State.interns && State.interns.length > 0) {
+    opts += '<optgroup label="Internship Cohort (Interns & Trainees)">';
+    State.interns.forEach(intn => {
+      opts += `<option value="intn:${intn.id}">[Intern] ${escapeHTML(intn.name)} (${escapeHTML(intn.intern_code || '')}) — ${escapeHTML(intn.college || 'Intern')}</option>`;
+    });
+    opts += '</optgroup>';
+  }
+  quickSelect.innerHTML = opts;
+}
+
 // Open and initialize Draft Document Modal
-function openDraftDocumentModal() {
+async function openDraftDocumentModal() {
   const today = new Date().toISOString().substring(0, 10);
   if ($('#draft-issue-date')) $('#draft-issue-date').value = today;
   if ($('#draft-start-date') && !$('#draft-start-date').value) $('#draft-start-date').value = today;
 
-  // Populate Quick-Autofill dropdown with Directory records
-  const quickSelect = $('#draft-quick-entity');
-  if (quickSelect) {
-    let opts = '<option value="">-- Choose Employee or Intern to Auto-Fill --</option>';
-    if (State.employees && State.employees.length > 0) {
-      opts += '<optgroup label="Registered Employees">';
-      State.employees.forEach(emp => {
-        opts += `<option value="emp:${emp.id}">[Employee] ${escapeHTML(emp.name)} — ${escapeHTML(emp.designation)}</option>`;
-      });
-      opts += '</optgroup>';
+  // Ensure employees and interns are loaded from API if empty
+  if (!State.employees || State.employees.length === 0) {
+    try {
+      const emps = await API.get('/api/employees');
+      if (emps && Array.isArray(emps)) State.employees = emps;
+    } catch (e) {
+      console.warn('Failed to prefetch employees for draft modal:', e);
     }
-    if (State.interns && State.interns.length > 0) {
-      opts += '<optgroup label="Internship Cohort">';
-      State.interns.forEach(intn => {
-        opts += `<option value="intn:${intn.id}">[Intern] ${escapeHTML(intn.name)} — ${escapeHTML(intn.designation)}</option>`;
-      });
-      opts += '</optgroup>';
+  }
+  if (!State.interns || State.interns.length === 0) {
+    try {
+      const interns = await API.get('/api/interns');
+      if (interns && Array.isArray(interns)) State.interns = interns;
+    } catch (e) {
+      console.warn('Failed to prefetch interns for draft modal:', e);
     }
-    quickSelect.innerHTML = opts;
   }
 
+  populateDraftDirectoryDropdown();
   onDraftDocTypeChange();
   openModal('modal-draft-document');
 }
@@ -2136,10 +2173,91 @@ function closeMobileSidebar() {
   $('#btn-mobile-toggle')?.setAttribute('aria-expanded', 'false');
 }
 
+// Clean document print / PDF handler (Isolates purely document sheet without website chrome)
+function printCurrentDocument() {
+  const container = $('#doc-preview-container');
+  const isLandscape = container && !!container.querySelector('.a4-landscape-sheet');
+
+  let printStyle = document.getElementById('dynamic-print-page-style');
+  if (!printStyle) {
+    printStyle = document.createElement('style');
+    printStyle.id = 'dynamic-print-page-style';
+    document.head.appendChild(printStyle);
+  }
+
+  if (isLandscape) {
+    printStyle.innerHTML = '@media print { @page { size: 297mm 210mm landscape !important; margin: 0 !important; } }';
+  } else {
+    printStyle.innerHTML = '@media print { @page { size: 210mm 297mm portrait !important; margin: 0 !important; } }';
+  }
+
+  window.print();
+}
+
+// Download raw standalone HTML document
+function downloadCurrentDocumentHTML() {
+  const container = $('#doc-preview-container');
+  if (!container || !container.innerHTML.trim()) {
+    alert('No document currently loaded to download.');
+    return;
+  }
+  const title = ($('#doc-viewer-modal-title')?.textContent || 'AgriGuardian_Document')
+    .replace(/[^a-zA-Z0-9_\-]/g, '_');
+  const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>${escapeHTML(title)}</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #525659; display: flex; justify-content: center; padding: 20px; margin: 0; font-family: 'Inter', -apple-system, sans-serif; }
+    .a4-document-sheet, .a4-landscape-sheet { background: #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .a4-document-sheet, .a4-landscape-sheet { box-shadow: none; border: none; }
+    }
+  </style>
+</head>
+<body>
+  ${container.innerHTML}
+</body>
+</html>`;
+
+  const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${title}.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// Ensure correct print page size on Ctrl+P
+window.addEventListener('beforeprint', () => {
+  const container = $('#doc-preview-container');
+  const isLandscape = container && !!container.querySelector('.a4-landscape-sheet');
+  let printStyle = document.getElementById('dynamic-print-page-style');
+  if (!printStyle) {
+    printStyle = document.createElement('style');
+    printStyle.id = 'dynamic-print-page-style';
+    document.head.appendChild(printStyle);
+  }
+  if (isLandscape) {
+    printStyle.innerHTML = '@media print { @page { size: 297mm 210mm landscape !important; margin: 0 !important; } }';
+  } else {
+    printStyle.innerHTML = '@media print { @page { size: 210mm 297mm portrait !important; margin: 0 !important; } }';
+  }
+});
+
 // Bind Global Functions to Window for Inline Handlers
 window.previewQuotation = previewQuotation;
 window.previewDocRecord = previewDocRecord;
 window.previewOfficialDoc = previewOfficialDoc;
+window.printCurrentDocument = printCurrentDocument;
+window.downloadCurrentDocumentHTML = downloadCurrentDocumentHTML;
+window.populateDraftDirectoryDropdown = populateDraftDirectoryDropdown;
 window.convertToInvoice = convertToInvoice;
 window.approveQuotation = approveQuotation;
 window.rejectQuotation = rejectQuotation;
@@ -2737,25 +2855,47 @@ document.addEventListener('DOMContentLoaded', () => {
       const emp = State.employees.find(x => x.id === id);
       if (emp) {
         if ($('#draft-recipient-name')) $('#draft-recipient-name').value = emp.name;
-        if ($('#draft-designation')) $('#draft-designation').value = emp.designation;
+        if ($('#draft-designation')) $('#draft-designation').value = emp.designation || 'Specialist';
         if ($('#draft-department')) $('#draft-department').value = emp.department || 'AI & Robotics';
         if ($('#draft-recipient-sub')) $('#draft-recipient-sub').value = emp.address || 'Chennai, Tamil Nadu';
         if ($('#draft-start-date')) $('#draft-start-date').value = emp.joining_date || new Date().toISOString().substring(0, 10);
-        if ($('#draft-compensation')) $('#draft-compensation').value = formatINR(emp.salary) + ' / month (Gross)';
+
+        let compStr = '';
+        if (emp.salary) {
+          if (typeof emp.salary === 'string' && emp.salary.trim()) {
+            compStr = emp.salary;
+          } else if (typeof emp.salary === 'number') {
+            compStr = formatINR(emp.salary) + ' / month (Gross)';
+          }
+        }
+        if (!compStr) compStr = '₹35,000 / month (Gross)';
+        if ($('#draft-compensation')) $('#draft-compensation').value = compStr;
         if ($('#draft-mentor')) $('#draft-mentor').value = 'Saivignesh R V';
+
+        // Auto-switch to employee document if intern document was currently selected
+        if ($('#draft-doc-type') && $('#draft-doc-type').value.toLowerCase().includes('intern')) {
+          $('#draft-doc-type').value = 'Employee Offer Letter';
+        }
+
         onDraftDocTypeChange();
       }
     } else if (type === 'intn') {
       const intn = State.interns.find(x => x.id === id);
       if (intn) {
         if ($('#draft-recipient-name')) $('#draft-recipient-name').value = intn.name;
-        if ($('#draft-designation')) $('#draft-designation').value = intn.designation;
+        if ($('#draft-designation')) $('#draft-designation').value = intn.designation || intn.domain || 'Machine Learning Intern';
         if ($('#draft-department')) $('#draft-department').value = 'AI & Robotics';
         if ($('#draft-recipient-sub')) $('#draft-recipient-sub').value = intn.college || 'Panimalar Engineering College, Chennai';
         if ($('#draft-start-date')) $('#draft-start-date').value = intn.joining_date || '';
         if ($('#draft-end-date')) $('#draft-end-date').value = intn.end_date || '';
-        if ($('#draft-compensation')) $('#draft-compensation').value = intn.stipend || '₹10,000 / month Stipend';
+        if ($('#draft-compensation')) $('#draft-compensation').value = intn.stipend || 'Performance Stipend';
         if ($('#draft-mentor')) $('#draft-mentor').value = intn.mentor || 'Jas Annuncia M';
+
+        // Auto-switch to internship document if employee document was currently selected
+        if ($('#draft-doc-type') && !$('#draft-doc-type').value.toLowerCase().includes('intern') && !$('#draft-doc-type').value.toLowerCase().includes('certificate')) {
+          $('#draft-doc-type').value = 'Internship Offer Letter';
+        }
+
         onDraftDocTypeChange();
       }
     }

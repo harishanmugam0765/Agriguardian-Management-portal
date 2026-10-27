@@ -603,7 +603,7 @@
             <p>Generate, preview, and print officially branded documents. Pixel-perfect compliance with AgriGuardian letterhead, MSME registration, and dual-signatory standards.</p>
           </div>
           <div>
-            <button class="btn btn-primary btn-sm" id="btn-create-letter">+ Draft Official Document</button>
+            <button class="btn btn-primary btn-sm" id="btn-create-letter" onclick="openDraftDocumentModal()">+ Draft Official Document</button>
           </div>
         </div>
 
@@ -1051,8 +1051,9 @@
     <div class="modal-card" style="max-width: 1250px; width: 96vw;">
       <div class="modal-header">
         <h3 id="doc-viewer-modal-title">Official Document Preview</h3>
-        <div style="display:flex; gap:0.5rem; align-items:center;">
-          <button class="btn btn-gold btn-sm" onclick="window.print()">🖨️ Print Sheet / Save PDF</button>
+        <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+          <button class="btn btn-gold btn-sm" id="btn-print-doc" onclick="printCurrentDocument()">🖨️ Print / Save as PDF</button>
+          <button class="btn btn-secondary btn-sm" id="btn-download-doc" onclick="downloadCurrentDocumentHTML()">📥 Download Letter</button>
           <button class="btn btn-secondary btn-sm" onclick="closeModal('modal-doc-viewer')">Close</button>
         </div>
       </div>
